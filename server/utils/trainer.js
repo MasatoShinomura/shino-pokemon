@@ -24,8 +24,16 @@ export const findTrainers = async () => {
 };
 
 /** トレーナーの取得 */
-// TODO: トレーナーを取得する S3 クライアント処理の実装
-
+export const findTrainer = async (name) => {
+  const object = await s3Client.send(
+    new GetObjectCommand({
+      Bucket: config.bucketName,
+      Key: `${name}.json`,
+    }),
+  );
+  const trainer = JSON.parse(await object.Body.transformToString());
+  return trainer;
+};
 
 
 

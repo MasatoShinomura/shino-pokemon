@@ -19,7 +19,7 @@ const submitTrainerName = async () => {
     }
     const data = await response.json();
     console.log("Trainer name submitted successfully:", data);
-    router.push(`/trainer/${trainerName.value}`);
+    router.push(`/trainer/${trainerName.value}/chooseInitialPokemon`);
   } catch (error) {
     console.error("Error submitting trainer name:", error);
   }
@@ -52,6 +52,7 @@ const submitTrainerName = async () => {
         決定
       </GamifyButton>
     </form>
+
     <GamifyDialog
       v-if="dialog"
       id="confirm-submit"
@@ -67,38 +68,7 @@ const submitTrainerName = async () => {
           <GamifyButton @click="onClose">いいえ</GamifyButton>
         </GamifyItem>
       </GamifyList>
-      
-      <!-- <GamifyItem>
-        <GamifyButton @click="showCompanionDialog">はい</GamifyButton>
-      </GamifyItem>
-          </GamifyList>
-        </GamifyDialog>
-
-        <GamifyDialog
-          v-if="companionDialog"
-          id="select-companion"
-          title="仲間を選ぶ"
-          description="次に連れていく仲間を選ぶのじゃ"
-          @close="onCloseCompanionDialog"
-        >
-          <GamifyList :border="false" direction="vertical">
-      <GamifyItem>
-        <GamifyButton @click="selectCompanion('仲間1')">仲間1</GamifyButton>
-      </GamifyItem>
-      <GamifyItem>
-        <GamifyButton @click="selectCompanion('仲間2')">仲間2</GamifyButton>
-      </GamifyItem>
-      <GamifyItem>
-        <GamifyButton @click="selectCompanion('仲間3')">仲間3</GamifyButton>
-      </GamifyItem>
-          </GamifyList>
-        </GamifyDialog> -->
-
-
     </GamifyDialog>
-
-
-
   </div>
 </template>
 

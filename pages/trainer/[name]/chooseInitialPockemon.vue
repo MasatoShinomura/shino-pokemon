@@ -1,5 +1,6 @@
 <script setup>
 import GamifyButton from '~/components/GamifyButton.vue';
+const initialPokemonList = ['bulbasaur', 'charmander', 'squirtle'];
 
 const route = useRoute();
 const router = useRouter();
@@ -31,29 +32,16 @@ const { dialog, onOpen, onClose } = useDialog();
 
 </script>
 
-
 <template>
   <div>
     <h1>トレーナー：{{ route.params.name }}</h1>
     <img src="/avatar.png" />
-    <p>トレーナーのポケモン数：{{ route.params.pokemonCount }}</p>
-    <p>トレーナーのポケモン：{{ route.params.pokemons }}</p>
-  </div>
-  <GamifyList>
-    <GamifyItem v-for="pokemon in pokemons.results" :key="pokemon.url">
-      <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}.png`" alt="pokemon.name" />
-      <span class="pokemon-name">{{ pokemon.name }}</span>
-      <GamifyButton @click="onOpen(pokemon)">つかまえる</GamifyButton>
-    </GamifyItem>
-  </GamifyList>
+    
+
+
+
+  </div> 
 </template>
-
-<style scoped>
-h1 {
-  font-size: 2rem;
-}
-</style>
-
-
+  
 
 

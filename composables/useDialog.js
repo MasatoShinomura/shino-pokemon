@@ -1,5 +1,5 @@
 export default () => {
-  const dialog = ref(null);
+  const dialog = ref(null); // リアクティブな値
   const onOpen = (value) => {
     dialog.value = value;
   };
@@ -12,3 +12,7 @@ export default () => {
     onClose,
   };
 };
+
+// 無名関数を使うことでコンポーネント単位で状態を管理できる！
+// 他のコンポーネントと状態が混ざらない。
+// 呼び出すたびに新しいデータを作成できる。

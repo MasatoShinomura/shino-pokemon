@@ -44,8 +44,16 @@ defineProps({
 }
 
 .catch-button:hover .pokemon-ball {
-  animation: bounce;
-  animation-duration: 0.8s;
+  animation: spin 0.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .catch-button::before {

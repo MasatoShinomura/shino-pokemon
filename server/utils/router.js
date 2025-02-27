@@ -88,14 +88,30 @@ router.post("/trainer/:trainerName/pokemon", async (req, res, next) => {
   try {
     const { trainerName } = req.params;
     const trainer = await findTrainer(trainerName);
-    if (!("name" in req.body && req.body.name.length > 0)) 
+    if (!trainer) {
+      console.error(`Trainer ${trainerName} not found`);
+      return res.sendStatus(404);
+    }
+    if (!("name" in req.body && req.body.name.length > 0)) {
+      console.error('Invalid request body:', req.body);
       return res.sendStatus(400);
+    }
+
     const pokemon = await findPokemon(req.body.name);
+    if (!pokemon) {
+      console.error(`Pokemon ${req.body.name} not found`);
+      return res.sendStatus(404)
+    }
     const {
       order,
       name,
       sprites: { front_default },
     } = pokemon;
+
+    if (!Array.isArray(trainer.pokemons)) {
+      console.error("Trainer has no pokemons:", trainer);
+      trainer.pokemons = [];
+    }
     trainer.pokemons.push({
       id: (trainer.pokemons[trainer.pokemons.length - 1]?.id ?? 0) + 1,
       nickname: "",
@@ -103,7 +119,13 @@ router.post("/trainer/:trainerName/pokemon", async (req, res, next) => {
       name,
       sprites: { front_default },
     })
+
     const result = await upsertTrainer(trainerName, trainer);
+    console.log("Upsert result:", result);
+    if (!result || !result["$metadata"]) {
+      console.error("Upsert failed:", result);
+      return res.sendStatus(500);
+    }
     res.status(result["$metadata"].httpStatusCode).send(result);
   } catch (err) {
     next(err);

@@ -39,6 +39,19 @@ const onNickname = async (pokemon) => {
   onCloseNickname();
 };
 
+// ポケモンを逃がす
+const onRelease = async (pokemonId) => {
+  const response = await fetch(
+    `/api/trainer/${route.params.name}/pokemon/${pokemonId}`,
+    {
+      baseURL: config.public.backendOrigin,
+      method: "DELETE",
+    },
+  ).catch((e) => e);
+  if (response instanceof Error) return;
+  await refresh();
+  onCloseRelease();
+};
 // 各ダイアログのオブジェクトを定義
 const {
   dialog: deleteDialog,
@@ -57,7 +70,7 @@ const {
 } = useDialog;
 
 // ポケモンの一覧を取得
-const { data: pokemons, refresh } = await useFetch(
+const { data: pokemons } = await useFetch(
   () =>
     `https://pokeapi.co/api/v2/pokemon?offset=${9}&limit=${20}`,
   {
@@ -86,26 +99,30 @@ const { dialog, onOpen, onClose } = useDialog();
 
 <template>
   <div>
-    <h1>トレーナー：{{ route.params.name }}</h1>
-    <img src="/avatar.png" />
-    <p>トレーナーのポケモン数：{{ route.params.pokemonCount }}</p>
-    <p>トレーナーのポケモン：{{ route.params.pokemons }}</p>
+    <h1>トレーナー情報</h1>
+    <div class="trainer-info">
+      <img src="/avatar.png" />
+      <p>なまえ：{{ route.params.name }}</p>
+      <p>トレーナーのポケモン数：{{ route.params.pokemonCount }}</p>
+      <p>トレーナーのポケモン：{{ route.params.pokemons }}</p>
+    </div>
+
+    <GamifyList>
+      <!-- 動的な処理 v-for, v-bind(:) -->
+      <GamifyItem v-for="pokemon in trainer.pokemons" :key="pokemon.id">
+        <img :src="pokemon.sprites.front_default" />
+        <span class="pokemon-name">{{ pokemon.nickname || pokemon.name }}</span>
+      </GamifyItem>
+    </GamifyList>
+    <GamifyList>
+      <GamifyItem v-for="pokemon in pokemons.results" :key="pokemon.url">
+        <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}.png`" alt="pokemon.name" />
+        <span class="pokemon-name">{{ pokemon.name }}</span>
+        <GamifyButton @click="onOpen(pokemon)">つかまえる</GamifyButton>
+      </GamifyItem>
+    </GamifyList>
   </div>
 
-  <GamifyList>
-    <!-- 動的な処理 v-for, v-bind(:) -->
-    <GamifyItem v-for="pokemon in trainer.pokemons" :key="pokemon.id">
-      <img :src="pokemon.sprites.front_default" />
-
-    </GamifyItem>
-  </GamifyList>
-  <!-- <GamifyList>
-    <GamifyItem v-for="pokemon in pokemons.results" :key="pokemon.url">
-      <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.url.split('/').slice(-2, -1)[0]}.png`" alt="pokemon.name" />
-      <span class="pokemon-name">{{ pokemon.name }}</span>
-      <GamifyButton @click="onOpen(pokemon)">つかまえる</GamifyButton>
-    </GamifyItem>
-  </GamifyList> -->
 </template>
 
 <style scoped>
